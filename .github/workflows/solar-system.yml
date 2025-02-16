@@ -72,7 +72,7 @@ jobs:
         - name: Checkout Repository
           uses: actions/checkout@v4
 
-        - name: Dockerhub Logi
+        - name: Dockerhub Login
           uses: docker/login-action@v3
           with:
             registry: ghcr.io
@@ -85,28 +85,6 @@ jobs:
             context: .
             push: true
             tags: ghcr.io/${{ github.repository_owner}}/solar-system:${{ github.sha }}
-        name: Unit Testing
-        runs-on: ubuntu-latest
-        steps:
-        - name: Checkout Repository
-          uses: actions/checkout@v4
-
-        - name: Setup NodeJS Version
-          uses: actions/setup-node@v4
-          with:
-            node-version: 20
-    
-        - name: Install Dependencies
-          run: npm install
-    
-        - name: Unit Testing
-          run: npm test
-          
-        - name: Archive Test Result
-          uses: actions/upload-artifact@v4
-          with:
-            name: Mocha-Test-Result
-            path: test-results.xml
 
     dev-deploy:
         name: Dev Deploy
@@ -127,7 +105,7 @@ jobs:
           uses: azure/k8s-set-context@v3
           with:
             method: kubeconfig
-            k8s-secret: ${{ secrets.KUBECONFIG }}
+            kubeconfig: ${{ secrets.KUBECONFIG }}
         
         - name: Ckeck Kubectl Version
           run: kubectl version --short -o yaml
